@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Code Scanner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+</head>
+<body>
+  <video id="video"></video>
+  <script type="text/javascript">
+    const codeReader = new ZXing.BrowserQRCodeReader();
+	const videoInputDeviceId = null; // set this to the ID of your camera if you want to use a specific camera
+	const video = document.getElementById('video'); // replace 'video' with the ID of your video element
+	
+		function send() {
+			document.getElementById("input").value.split("|").forEach((val) => {
+				console.log(val);
+				fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: intoFormData(val) })
+					.then(response => { 
+						alert('Sent!', response) })
+					.catch(error => {
+						alert('Error!', error.message)}) 
+			})
+		}
+
+		function reset() {
+			// reset the text
+			document.getElementById("result").innerText;
+			startRead();
+		}
+  </script>
+  <script>
+	const scriptURL = 'https://script.google.com/macros/s/AKfycbyTWeiKrPMGDViye5SrcK36e3c-BWJCBi3wbmo0FzwtKIqmYHYKqHYo8i5KAlmQK4A7/exec'
+	
+	function intoFormData(str) { 
+		var ll = str.split(';');
+		console.log(ll);
+		var form = new FormData();
+		ll.forEach((val) => {
+			console.log(val+' '+val.split('=')[0]+'   '+val.split('=')[0].length);
+			form.append(val.split('=')[0], val.slice(val.split('=')[0].length + 1, val.length))
+		})
+		return form
+	}
+
+  </script>
+  <br>
+  <button type="button" onclick="send()">send</button>
+  <input id="input" type="text" width="100" height="100"></input>
+</body>
+</html>
